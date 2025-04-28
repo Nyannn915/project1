@@ -1,56 +1,33 @@
 def words_on_board(words, board):
-    tiles_list = []
-    
-    for row_number in range(len(board)):
-        current_row = board[row_number]
-        
-       
-        for tile_number in range(len(current_row)):
-            
-            tiles_list.append(current_row[tile_number])
-    
-    valid_words = []
-    
-    for word_index in range(len(words)):
-        
-        current_word = words[word_index]
-        
-        hand_copy = []
-        for i in range(len(tiles_list)):
-            hand_copy.append(tiles_list[i])
-        
-        is_valid = True
-        
-        for letter_position in range(len(current_word)):
-            
-            current_letter = current_word[letter_position]
-            
-            found_in_hand = False
-            for j in range(len(hand_copy)):
-                if hand_copy[j] == current_letter:
-                    
-                    hand_copy.pop(j)
-                    found_in_hand = True
-                    break
-            
-            
-            if not found_in_hand:
-                is_valid = False
-                break
-        
-        
-        if is_valid:
-            valid_words.append(current_word)
-    
-    return valid_words
+    all_tiles = []
+    for row in board:
+        for letter in row:
+            all_tiles.append(letter)
 
+    tile_counter = Counter()
+    for ch in all_tiles:
+        tile_counter[ch] += 1
 
+    result = []
+    for word in words:
+        word_counter = Counter()
+        for c in word:
+            word_counter[c] += 1
 
-# board = [
-#         ['A', 'B', 'C'],
-#         ['D', 'E', 'F']
-#     ]
-# words = ['AB', 'FACE', 'BED', 'BAD', 'FED', 'CAB', 'ACE']
+        ok = True
+        used_blanks = 0 
 
-# result = words_on_board(words, board)
-# print("测试结果：", result)
+        for ch in word_counter:
+            if ch in tile_counter:
+                
+                if tile_counter[ch] >= word_counter[ch]:
+                    continue
+                else:
+                    blanks = tile_counter.get('_', 0) - used_blanks
+                    left_need = word_counter[ch] - tile_counter[ch]
+                    if blanks >= left_need:
+                        used_blanks += left_need
+                    else:
+                        ok = False
+                        break
+            else:
