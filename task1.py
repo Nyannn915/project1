@@ -20,4 +20,5 @@ def calculate_value(board):
                 sum_score = sum_score + 0
     return sum_score
 
-print(calculate_value([["a", "G"], ["C", "k"]]))
+print(calculate_value([["Z", "E"]])) 
+print(calculate_value([["?", " "], ["1", "A"]]))
