@@ -21,5 +21,4 @@ def calculate_value(board):
     return result
 
 # 测试
-print(calculate_value([["A"]]))         
-print(calculate_value([["Z"]]))         
+print(calculate_value([["Q", "Z"], ["K", "?"]]))      
