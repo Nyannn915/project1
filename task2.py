@@ -1,5 +1,5 @@
 def words_on_board(words, board):
-    # blank tile处理思路参考自Stackoom（https://stackoom.com/en/question/3Dz3N）
+    
     tiles = []
     for line in board:
         for tile in line:
@@ -20,4 +20,3 @@ def words_on_board(words, board):
         if valid:
             result.append(word)
     return result
-
