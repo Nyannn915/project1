@@ -11,4 +11,25 @@ def textoggle_move(board, word_sequence, spare_letters):
         col_index = position[1]
         new_board[row_index][col_index] = None
     
+    height = len(board)
+    width = len(board[0])
+    
+    for col in range(width):
+        stack = []
+        
+        for row in range(height):
+            if new_board[row][col] is not None:
+                stack.append(new_board[row][col])
+        
+        for row in range(height):
+            if stack:
+                new_board[row][col] = stack.pop()
+            else:
+                new_board[row][col] = None
+        
+        column_result = []
+        for r in range(height):
+            column_result.append(new_board[r][col])
+       
+    
     return new_board
