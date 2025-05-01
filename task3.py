@@ -1,63 +1,51 @@
-def find_word(w, b):
-    n = len(b)
-    m = len(b[0])
+def word_on_board(word, board):
+    height = len(board)
+    width = len(board[0])
     
-    def dfs(x, y, idx, vis, steps):
-        if idx == len(w):
-            return steps[:]
-        if x < 0 or x >= n or y < 0 or y >= m:
-            return None
-        if (x, y) in vis:
-            return None
-        if b[x][y] != w[idx]:
-            return None
+    for row in range(height):
+        for col in range(width):
+            if board[row][col] != word[0]:
+                continue  
+                
+            visited = set()
+            steps = []
+            
+            visited.add((row, col))
+            steps.append((row, col))
+            
+            if search_remaining(word, 1, row, col, board, visited, steps):
+                return steps  
+    
+    return None  
+
+
+def search_remaining(word, index, row, col, board, visited, steps):
+    if index >= len(word):
+        return True
+    
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    
+    for direction in directions:
+        dr, dc = direction
+        r = row + dr
+        c = col + dc
         
-        vis.add((x, y))
-        steps.append((x, y))
+        if r < 0 or r >= len(board) or c < 0 or c >= len(board[0]):
+            continue  
+            
+        if (r, c) in visited:
+            continue
+            
+        if board[r][c] != word[index]:
+            continue
+            
+        visited.add((r, c))
+        steps.append((r, c))
         
-        up = dfs(x - 1, y, idx + 1, vis, steps)
-        if up:
-            return up
-        down = dfs(x + 1, y, idx + 1, vis, steps)
-        if down:
-            return down
-        left = dfs(x, y - 1, idx + 1, vis, steps)
-        if left:
-            return left
-        right = dfs(x, y + 1, idx + 1, vis, steps)
-        if right:
-            return right
-        
+        if search_remaining(word, index + 1, r, c, board, visited, steps):
+            return True
+            
+        visited.remove((r, c))
         steps.pop()
-        vis.remove((x, y))
-        return None
     
-    for i in range(n):
-        for j in range(m):
-            visited_set = set()
-            path_list = []
-            result = dfs(i, j, 0, visited_set, path_list)
-            if result:
-                return result
-    return None
-
-#测试代码 
-board = [
-    ['A', 'B', 'C', 'E'],
-    ['S', 'F', 'C', 'S'],
-    ['A', 'D', 'E', 'E']
-]
-
-test_words = [
-    "SFCB",    
-    "ADEE",    
-]
-
-for word in test_words:
-    print(f"查找单词: {word}")
-    path = find_word(word, board)
-    if path:
-        print(f"  找到了！路径是: {path}")
-    else:
-        print(f"  没找到。")
-    print("-" * 35)
+    return False
