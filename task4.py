@@ -1,33 +1,37 @@
 def textoggle_move(board, word_sequence, spare_letters):
-    new_board = []
-    for i in range(len(board)):
-        new_row = []
-        for j in range(len(board[i])):
-            new_row.append(board[i][j])
-        new_board.append(new_row)
-    
-    for position in word_sequence:
-        row_index = position[0]
-        col_index = position[1]
-        new_board[row_index][col_index] = None
-    
+    new_board = [row[:] for row in board]
+
+    for row, col in word_sequence:
+        new_board[row][col] = None
+
     height = len(board)
     width = len(board[0])
-    
+    spare_index = 0  
+
     for col in range(width):
-        stack = []
-        
-        for row in range(height-1, -1, -1):
+        remaining = []
+
+        for row in range(height - 1, -1, -1):
             if new_board[row][col] is not None:
-                stack.append(new_board[row][col])
-        
-        for row in range(height-1, -1, -1):
-            if stack:
-                new_board[row][col] = stack.pop(0)
+                remaining.append(new_board[row][col])
+
+        for row in range(height - 1, -1, -1):
+            if remaining:
+                new_board[row][col] = remaining.pop(0)
+            elif spare_index < len(spare_letters):
+                new_board[row][col] = spare_letters[spare_index]
+                spare_index += 1
             else:
-                if spare_letters:
-                    new_board[row][col] = spare_letters[0]
-                else:
-                    new_board[row][col] = None
-    
+                new_board[row][col] = '#'  
+
     return new_board
+
+
+
+
+new_board = textoggle_move([['A', 'B', 'C'], ['D', 'E', 'F'], ['G', 'H', 'I']], [(1, 0), (0, 0), (0, 1)], ['Q', 'R'])
+[['R', '#', 'C'], ['Q', 'E', 'F'], ['G', 'H', 'I']] 
+
+print("textoggle_move：")
+for row in new_board:
+    print(row)
